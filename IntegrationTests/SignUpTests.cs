@@ -44,8 +44,24 @@ namespace IntegrationTests
 
             using (var postRentalResponse = await _client.PostAsJsonAsync($"/graphql", a))
             {
-                var stringResult = await postRentalResponse.Content.ReadAsStringAsync();
                 var postResult = await postRentalResponse.Content.ReadFromJsonAsync<Root<SignUpResponse>>();
+                var signUpResult = postResult.data.signUp;
+
+                Assert.NotNull(signUpResult.Username);
+                Assert.NotNull(signUpResult.FirstName);
+                Assert.NotNull(signUpResult.LastName);
+                Assert.NotNull(signUpResult.RefreshToken);
+                Assert.NotNull(signUpResult.AccessToken);
+
+                Assert.True(postRentalResponse.IsSuccessStatusCode);
+            }
+
+            using (var postRentalResponse = await _client.PostAsJsonAsync($"/graphql", a))
+            {
+                var postResult = await postRentalResponse.Content.ReadFromJsonAsync<Root<SignUpResponse>>();
+                var signUpResult = postResult.data.signUp;
+
+                Assert.Null(signUpResult);
 
                 Assert.True(postRentalResponse.IsSuccessStatusCode);
             }

@@ -1,44 +1,44 @@
-﻿using GraphQL.Server.Ui.Altair;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
+﻿using Autofac;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using MovieReviews.GraphQL;
-using MovieReviews.Middleware;
+using MovieReviews;
+using MovieReviews.Database;
+using MovieReviews.GraphQL.Types;
+using Movies.Service.GraphQL;
 
 namespace IntegrationTests
 {
-    public class TestStartup
+    public class TestStartup : Startup
     {
-        public IConfiguration Configuration;
-
-        public TestStartup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
-
-        public void ConfigureServices(IServiceCollection services)
+        public TestStartup(IConfiguration configuration) : base(configuration)
         {
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public override void ConfigureSpecificServices(IServiceCollection services)
         {
+            services.AddDbContext<ApplicationDbContext>(options =>
+               options.UseInMemoryDatabase(databaseName: "IntegrationDatabase"));
+        }
 
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            // custom jwt auth middleware
-            app.UseMiddleware<JwtMiddleware>();
-            app.UseAuthentication();
-            app.UseAuthorization();
-            app.UseGraphQL<MovieReviewSchema>();
-            // Enables Altair UI at path /
-            app.UseGraphQLAltair(new GraphQLAltairOptions { Path = "/" });
-
-
-            app.UseHttpsRedirection();
+        public override void ConfigureGraphQLTypes(ContainerBuilder builder)
+        {
+            // GraphQL Types
+            builder.RegisterType<TestSecretType>().AsSelf().SingleInstance();
+            builder.RegisterType<DrinkTypeEnumType>().AsSelf().SingleInstance();
+            builder.RegisterType<CharacterInterface>().AsSelf().SingleInstance();
+            builder.RegisterType<DrinkResponseType>().AsSelf().SingleInstance();
+            builder.RegisterType<DroidType>().AsSelf().SingleInstance();
+            builder.RegisterType<AuthenticateObject>().AsSelf().SingleInstance();
+            builder.RegisterType<AuthenticateRequestInputObject>().AsSelf().SingleInstance();
+            builder.RegisterType<DrinkInputObject>().AsSelf().SingleInstance();
+            builder.RegisterType<DrinkObject>().AsSelf().SingleInstance();
+            builder.RegisterType<MovieInputObject>().AsSelf().SingleInstance();
+            builder.RegisterType<MovieObject>().AsSelf().SingleInstance();
+            builder.RegisterType<ReviewInputObject>().AsSelf().SingleInstance();
+            builder.RegisterType<ReviewObject>().AsSelf().SingleInstance();
+            builder.RegisterType<SignUpInputObject>().AsSelf().SingleInstance();
+            builder.RegisterType<SignUpObject>().AsSelf().SingleInstance();
         }
     }
 }

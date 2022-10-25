@@ -94,6 +94,13 @@ namespace MovieReviews
             builder.RegisterType<DocumentWriter>().AsImplementedInterfaces().SingleInstance();
             builder.RegisterType<QueryObject>().AsSelf().SingleInstance();
             builder.RegisterType<MovieReviewSchema>().AsSelf().SingleInstance();
+
+            ConfigureGraphQLTypes(builder);
+        }
+
+        public virtual void ConfigureGraphQLTypes(ContainerBuilder builder)
+        {
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
