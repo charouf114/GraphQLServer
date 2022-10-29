@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using MovieReviews.Database;
-using Movies.Service.Common.Helpers;
 using Movies.Service.Common.Models;
 using Movies.Service.Common.Models.Login.SignUp;
 using System;
@@ -21,9 +20,9 @@ namespace MovieReviews.Services
         private User _user = new User { Id = Guid.NewGuid(), FirstName = "Test2", LastName = "User2", PasswordHash = "test" };
 
 
-        private readonly AppSettings _appSettings;
+        private readonly AppSecrets _appSettings;
 
-        public UserService(IOptions<AppSettings> appSettings, IUserRepository userRepository)
+        public UserService(IOptions<AppSecrets> appSettings, IUserRepository userRepository)
         {
             _appSettings = appSettings.Value;
             _userRepository = userRepository;
@@ -53,7 +52,7 @@ namespace MovieReviews.Services
                 Mail = model.Mail,
                 PhoneNumber = model.PhoneNumber,
                 Function = model.Function,
-                Roles = model.Roles,
+                Roles = UserRoles.User,
                 PasswordHash = model.Password
             };
 
@@ -66,7 +65,6 @@ namespace MovieReviews.Services
             return new SignUpResponse(userToAdd, accessToken, refreshToken);
 
         }
-
 
         public async Task<AuthenticateResponse> Authenticate(AuthenticateRequest model)
         {

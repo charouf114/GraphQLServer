@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using MovieReviews.Services;
-using Movies.Service.Common.Helpers;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
@@ -16,9 +15,14 @@ namespace MovieReviews.Middleware
     public class JwtMiddleware
     {
         private readonly RequestDelegate _next;
-        private readonly AppSettings _appSettings;
+        private readonly AppSecrets _appSettings;
 
-        public JwtMiddleware(RequestDelegate next, IOptions<AppSettings> appSettings)
+        /// <summary>
+        /// Used For The API With No User Token.
+        /// </summary>
+        public const string SecretCode = "AZNDJEDLDLSXODKCKCKVKVKVKVKVVVDHHSQ";
+
+        public JwtMiddleware(RequestDelegate next, IOptions<AppSecrets> appSettings)
         {
             _next = next;
             _appSettings = appSettings.Value;
@@ -27,10 +31,17 @@ namespace MovieReviews.Middleware
         public async Task Invoke(HttpContext context, IUserService userService)
         {
             var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+            var code = context.Request.Headers["code"].FirstOrDefault()?.Split(" ").Last();
 
-            //if (token != null)
-
-            attachUserToContext(context, userService, token);
+            if (token != null)
+            {
+                attachUserToContext(context, userService, token);
+            }
+            else if (code == SecretCode)
+            {
+                context.Items["User"] = new GenericPrincipal(new ClaimsIdentity("SUPER ADMIN"), new string[] { "Admin" });
+                context.User = new GenericPrincipal(new ClaimsIdentity("SUPER ADMIN"), new string[] { "Admin" });
+            }
 
             await _next(context);
         }
@@ -59,16 +70,10 @@ namespace MovieReviews.Middleware
 
                 context.Items["User"] = user;
 
-                context.User = new GenericPrincipal(new ClaimsIdentity(user.FirstName), new string[] { "Admin" });
-
-
+                context.User = new GenericPrincipal(new ClaimsIdentity(user.FirstName), user.RolesList);
             }
             catch
             {
-                // Achref Was About testing
-                context.Items["User"] = new GenericPrincipal(new ClaimsIdentity("Achref"), new string[] { "Admin" });
-
-                context.User = new GenericPrincipal(new ClaimsIdentity("Achref"), new string[] { "Admin" });
                 // do nothing if jwt validation fails
                 // user is not attached to context so request won't have access to secure routes
             }

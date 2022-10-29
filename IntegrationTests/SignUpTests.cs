@@ -42,6 +42,9 @@ namespace IntegrationTests
                 query = mutation,
             };
 
+            _client.DefaultRequestHeaders.Add("Accept", "application/json");
+            _client.DefaultRequestHeaders.Add("code", "AZNDJEDLDLSXODKCKCKVKVKVKVKVVVDHHSQ");
+
             using (var postRentalResponse = await _client.PostAsJsonAsync($"/graphql", a))
             {
                 var postResult = await postRentalResponse.Content.ReadFromJsonAsync<Root<SignUpResponse>>();

@@ -17,7 +17,6 @@ using MovieReviews.GraphQL;
 using MovieReviews.Middleware;
 using MovieReviews.Services;
 using Movies.service.Common.Models;
-using Movies.Service.Common.Helpers;
 using Movies.Service.GraphQL;
 
 namespace MovieReviews
@@ -48,10 +47,9 @@ namespace MovieReviews
             services.AddAuthentication();
 
             // configure strongly typed settings object
-            services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
+            services.Configure<AppSecrets>(Configuration.GetSection("AppSecrets"));
 
             // configure DI for application services
-
             services
                 .AddGraphQL(
                     (options, provider) =>
