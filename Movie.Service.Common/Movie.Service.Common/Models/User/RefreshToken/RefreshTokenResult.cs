@@ -1,7 +1,15 @@
 ﻿namespace Movies.Service.Common.Models
 {
-    class RefreshTokenResult
+    class RefreshTokenResult : AuthenticateResponse
     {
-        public string RedirectLink { get; set; }
+
+        public RefreshTokenResult(User user, string accessToken, string refreshToken) : base(user, accessToken, refreshToken)
+        {
+        }
+
+        public RefreshTokenResult()
+        {
+
+        }
     }
 }

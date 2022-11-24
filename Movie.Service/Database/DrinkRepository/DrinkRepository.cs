@@ -18,7 +18,7 @@ namespace MovieReviews.Database
 
         public async Task<Drink> GetLatestCoffe(Drink drink)
         {
-            var drinkResult = await _context.Drinks.Where(d => d.BadgeId == drink.BadgeId)
+            var drinkResult = await _context.Drinks.Where(d => d.BadgeId == drink.BadgeId).Include(x => x.User)
                            .OrderByDescending(d => d.CreationDate)
                            .FirstOrDefaultAsync();
             if (drinkResult != null)
@@ -47,6 +47,7 @@ namespace MovieReviews.Database
                 latestDrink.DrinkType = drink.DrinkType;
                 latestDrink.SucreCount = drink.SucreCount;
                 latestDrink.HasMug = drink.HasMug;
+                latestDrink.UserId = drink.UserId;
             }
             await _context.SaveChanges();
             return drink;

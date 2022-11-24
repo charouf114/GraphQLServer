@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Movies.service.Common.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -33,6 +34,8 @@ namespace Movies.Service.Common.Models
 
         [NotMapped]
         public string[] RolesList => getRolesFromEnum(Roles);
+
+        public ICollection<Drink> Drinks { get; set; }
 
         public string[] getRolesFromEnum(UserRoles value)
         {

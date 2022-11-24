@@ -2,8 +2,8 @@
 {
     public enum DrinkType
     {
-        The = 1,
-        Coffe = 2,
-        Chocolat = 3,
+        The = 0,
+        Coffe = 1,
+        Chocolat = 2,
     }
 }

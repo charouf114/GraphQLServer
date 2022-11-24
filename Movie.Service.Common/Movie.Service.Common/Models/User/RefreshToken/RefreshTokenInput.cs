@@ -2,6 +2,6 @@
 {
     public class RefreshTokenInput
     {
-        public string RedirectLink { get; set; }
+        public string refreshToken { get; set; }
     }
 }

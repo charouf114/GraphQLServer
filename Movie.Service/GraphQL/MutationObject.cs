@@ -12,7 +12,7 @@ namespace MovieReviews.GraphQL
 {
     public class MutationObject : ObjectGraphType<object>
     {
-        public MutationObject(IReviewRepository reviewRepository, IMovieRepository movieRepository, IDrinkRepository drinkRepository, IUserService userService)
+        public MutationObject(IReviewRepository reviewRepository, IMovieRepository movieRepository, IDrinkService drinkService, IUserService userService)
         {
             Name = "Mutations";
             Description = "The base mutation for all the entities in our object graph.";
@@ -65,7 +65,8 @@ namespace MovieReviews.GraphQL
                  context =>
                  {
                      var drink = context.GetArgument<Drink>("drink");
-                     return drinkRepository.AddCoffe(drink);
+
+                     return drinkService.AddCoffe(drink);
                  });
 
             FieldAsync<AuthenticateObject, AuthenticateResponse>(

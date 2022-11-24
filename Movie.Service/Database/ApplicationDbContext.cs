@@ -30,6 +30,11 @@ namespace MovieReviews.Database
         {
             modelBuilder.Entity<IdentityUser>()
                 .ToTable("AspNetUsers", t => t.ExcludeFromMigrations());
+
+            modelBuilder.Entity<User>()
+                .HasMany(x => x.Drinks)
+                .WithOne(x => x.User)
+                .HasForeignKey(x => x.UserId);
         }
     }
 }

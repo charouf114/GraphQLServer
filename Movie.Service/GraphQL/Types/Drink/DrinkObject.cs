@@ -1,6 +1,6 @@
 ﻿using GraphQL.Types;
-using Movies.service.Common.Models;
 using MovieReviews.Database;
+using Movies.service.Common.Models;
 using Movies.Service.GraphQL;
 
 namespace MovieReviews.GraphQL.Types
@@ -19,15 +19,15 @@ namespace MovieReviews.GraphQL.Types
                 name: "DrinkType",
                 description: "Drink Type (Coffe, Tea...)",
                 type: typeof(DrinkTypeEnumType),
-                resolve: d =>d.Source.DrinkType);
+                resolve: d => d.Source.DrinkType);
 
             Field(
-                name: "Response",
-                description: "ResultCode",
-                type: typeof(DrinkResponseType),
+                name: "User",
+                description: "Owner of the Drink",
+                type: typeof(UserObject),
                 resolve: d =>
                 {
-                   return  d.Source.response ?? new FailedResponse();
+                    return d.Source.User;
                 });
 
             Field(
@@ -46,10 +46,10 @@ namespace MovieReviews.GraphQL.Types
                 type: typeof(TestSecretType),
                 resolve: d =>
                 {
-                    return new TestSecret() { Secret = "50000"};
+                    return new TestSecret() { Secret = "50000" };
                 });
 
-            
+
         }
     }
 }

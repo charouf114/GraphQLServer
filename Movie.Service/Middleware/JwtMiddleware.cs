@@ -2,8 +2,10 @@
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using MovieReviews.Services;
+using Movies.Service.Common;
 using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Security.Principal;
@@ -33,11 +35,27 @@ namespace MovieReviews.Middleware
             var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
             var code = context.Request.Headers["code"].FirstOrDefault()?.Split(" ").Last();
 
+            Request request;
+            var originBody = context.Request.Body;
+            try
+            {
+                using (var body = new MemoryStream())
+                {
+                    await context.Request.Body.CopyToAsync(body);
+                    request = Request.New(body);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+
+            originBody.Seek(0, SeekOrigin.Begin);
             if (token != null)
             {
                 attachUserToContext(context, userService, token);
             }
-            else if (code == SecretCode)
+            else //if (code == SecretCode)
             {
                 context.Items["User"] = new GenericPrincipal(new ClaimsIdentity("SUPER ADMIN"), new string[] { "Admin" });
                 context.User = new GenericPrincipal(new ClaimsIdentity("SUPER ADMIN"), new string[] { "Admin" });

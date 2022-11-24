@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Movies.Service.Common.Models;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -18,8 +19,9 @@ namespace Movies.service.Common.Models
 
         public DateTime? CreationDate { get; set; }
 
-        [NotMapped]
-        public Response response { get; set; }
+        public Guid UserId { get; set; }
+
+        public User User { get; set; }
 
         [NotMapped]
         public ICharacter character { get; set; }

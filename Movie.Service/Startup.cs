@@ -17,6 +17,7 @@ using MovieReviews.GraphQL;
 using MovieReviews.Middleware;
 using MovieReviews.Services;
 using Movies.service.Common.Models;
+using Movies.Service.Common.Models;
 using Movies.Service.GraphQL;
 
 namespace MovieReviews
@@ -37,11 +38,12 @@ namespace MovieReviews
 
             services.AddScoped<IApplicationDbContext>(provider => provider.GetService<ApplicationDbContext>());
             services.AddSingleton<EnumerationGraphType<DrinkType>, DrinkTypeEnumType>();
-            services.AddSingleton<ObjectGraphType<Response>, DrinkResponseType>();
+            services.AddSingleton<ObjectGraphType<User>, UserObject>();
             services.AddSingleton<InterfaceGraphType<ICharacter>, CharacterInterface>();
             services.AddSingleton<ObjectGraphType<Droid>, DroidType>();
             services.AddSingleton<IValidationRule, RequiresAuthValidationRule>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IDrinkService, DrinkService>();
 
             services.AddAuthorization();
             services.AddAuthentication();
@@ -109,6 +111,12 @@ namespace MovieReviews
                 app.UseDeveloperExceptionPage();
             }
             // custom jwt auth middleware
+            app.Use(async (context, next) =>
+            {
+                context.Request.EnableBuffering();
+                await next();
+            });
+
             app.UseMiddleware<JwtMiddleware>();
             app.UseAuthentication();
             app.UseAuthorization();

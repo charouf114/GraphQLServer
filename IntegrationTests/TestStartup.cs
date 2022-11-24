@@ -27,7 +27,7 @@ namespace IntegrationTests
             builder.RegisterType<TestSecretType>().AsSelf().SingleInstance();
             builder.RegisterType<DrinkTypeEnumType>().AsSelf().SingleInstance();
             builder.RegisterType<CharacterInterface>().AsSelf().SingleInstance();
-            builder.RegisterType<DrinkResponseType>().AsSelf().SingleInstance();
+            builder.RegisterType<UserObject>().AsSelf().SingleInstance();
             builder.RegisterType<DroidType>().AsSelf().SingleInstance();
             builder.RegisterType<AuthenticateObject>().AsSelf().SingleInstance();
             builder.RegisterType<AuthenticateRequestInputObject>().AsSelf().SingleInstance();
